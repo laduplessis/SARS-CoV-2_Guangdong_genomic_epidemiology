@@ -1,6 +1,6 @@
 # Genomic epidemiology of SARS-CoV-2 in Guangdong Province, China
 
-## Jing Lu, Louis du Plessis, Zhe Liu, Verity Hill, Min Kang, Huifang Lin, Jiufeng Sun, Sarah François, Moritz U G Kraemer, Nuno R Faria, John T McCrone,  Jingju Peng, Qianlin Xiong, Runyu Yuan, Lilian Zeng, Pingping Zhou, Chuming Liang, Lina Yi1, Jun Liu, Jianpeng Xiao, Jianxiong Hu, Tao Liu, Wenjun Ma, Wei Li, Juan Su, Huanying Zheng, Bo Peng, Shisong Fang, Wenzhe Su, Kuibiao Li, Ruilin Sun, Ru bai, Xi Tang, Minfeng Liang, Josh Quick, Tie Song, Andrew Rambaut, Nick Loman, Jayna Raghwani, Oliver G Pybus, Changwen Ke
+### Jing Lu, Louis du Plessis, Zhe Liu, Verity Hill, Min Kang, Huifang Lin, Jiufeng Sun, Sarah François, Moritz U G Kraemer, Nuno R Faria, John T McCrone,  Jingju Peng, Qianlin Xiong, Runyu Yuan, Lilian Zeng, Pingping Zhou, Chuming Liang, Lina Yi, Jun Liu, Jianpeng Xiao, Jianxiong Hu, Tao Liu, Wenjun Ma, Wei Li, Juan Su, Huanying Zheng, Bo Peng, Shisong Fang, Wenzhe Su, Kuibiao Li, Ruilin Sun, Ru bai, Xi Tang, Minfeng Liang, Josh Quick, Tie Song, Andrew Rambaut, Nick Loman, Jayna Raghwani, Oliver G Pybus, Changwen Ke
 
 
 This repository contains the data files, configuration files, log files, tree files and scripts necessary to reproduce the analyses and figures presented in [https://doi.org/10.1101/2020.04.01.20047076](https://doi.org/10.1101/2020.04.01.20047076). Some of the scripts may need some adjustment depending on the local setup. 
