@@ -21,6 +21,13 @@ _COVID-19 is caused by the SARS-CoV-2 coronavirus and was first reported in cent
 
 ## Dependencies
 
+- PhyML 3.3
+- BEAST v1.10.4
+- BioPython
+- ggplot2
+- ggtree
+- [figtreejs-react](https://github.com/jtmccr1/figtreejs-react): Commit #96534dc
+- [beastio](https://github.com/laduplessis/beastio): Commit #b18caa6
 
 
 ## Phylogenetic analyses
