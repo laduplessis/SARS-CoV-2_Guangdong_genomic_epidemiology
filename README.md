@@ -36,7 +36,7 @@ _COVID-19 is caused by the SARS-CoV-2 coronavirus and was first reported in cent
 2. [samples.csv](https://github.com/laduplessis/SARS-CoV-2_Guangdong_genomic_epidemiology/blob/master/data/samples.csv): Sequencing samples collected in Guangdong.
 3. [sequences.csv](https://github.com/laduplessis/SARS-CoV-2_Guangdong_genomic_epidemiology/blob/master/data/sequences.csv): Statistics of sequences generated from the samples in `samples.csv`.
 4. [final_alignment_GDHB.csv](https://github.com/laduplessis/SARS-CoV-2_Guangdong_genomic_epidemiology/blob/master/data/final_alignment_GDHB.csv): Taxon labels of sequences from Guangdong and Hubei in the final alignment.
-5. [GISAID_acknowledgements.txt](https://github.com/laduplessis/SARS-CoV-2_Guangdong_genomic_epidemiology/blob/master/data/GISAID_acknowledgements.txt): Sequences used in the analyses.
+5. [GISAID_acknowledgements.csv](https://github.com/laduplessis/SARS-CoV-2_Guangdong_genomic_epidemiology/blob/master/data/GISAID_acknowledgements.csv): Sequences used in the analyses.
 
 
 ## Phylogenetic analyses
