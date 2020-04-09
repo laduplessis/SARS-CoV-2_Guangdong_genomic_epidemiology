@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/SARS-CoV-2_Guangdong_genomic_epidemiology/static/css/main.5ecd60fb.chunk.css",
+    "main.js": "/SARS-CoV-2_Guangdong_genomic_epidemiology/static/js/main.d0101926.chunk.js",
+    "main.js.map": "/SARS-CoV-2_Guangdong_genomic_epidemiology/static/js/main.d0101926.chunk.js.map",
+    "runtime-main.js": "/SARS-CoV-2_Guangdong_genomic_epidemiology/static/js/runtime-main.30187842.js",
+    "runtime-main.js.map": "/SARS-CoV-2_Guangdong_genomic_epidemiology/static/js/runtime-main.30187842.js.map",
+    "static/js/2.6cb929b0.chunk.js": "/SARS-CoV-2_Guangdong_genomic_epidemiology/static/js/2.6cb929b0.chunk.js",
+    "static/js/2.6cb929b0.chunk.js.map": "/SARS-CoV-2_Guangdong_genomic_epidemiology/static/js/2.6cb929b0.chunk.js.map",
+    "index.html": "/SARS-CoV-2_Guangdong_genomic_epidemiology/index.html",
+    "precache-manifest.f350cd697bd3dc9c9ecf8ac94664e926.js": "/SARS-CoV-2_Guangdong_genomic_epidemiology/precache-manifest.f350cd697bd3dc9c9ecf8ac94664e926.js",
+    "service-worker.js": "/SARS-CoV-2_Guangdong_genomic_epidemiology/service-worker.js",
+    "static/css/main.5ecd60fb.chunk.css.map": "/SARS-CoV-2_Guangdong_genomic_epidemiology/static/css/main.5ecd60fb.chunk.css.map",
+    "static/js/2.6cb929b0.chunk.js.LICENSE.txt": "/SARS-CoV-2_Guangdong_genomic_epidemiology/static/js/2.6cb929b0.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.30187842.js",
+    "static/js/2.6cb929b0.chunk.js",
+    "static/css/main.5ecd60fb.chunk.css",
+    "static/js/main.d0101926.chunk.js"
+  ]
+}
