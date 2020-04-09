@@ -28,7 +28,10 @@ _COVID-19 is caused by the SARS-CoV-2 coronavirus and was first reported in cent
 
 
 ## MCC tree figure
-
+An interactive version of Figure 3B with options to zoom in on clades 
+can toggle between lineage and location annotations can be found [here](https://laduplessis.github.io/SARS-CoV-2_Guangdong_genomic_epidemiology/).
+The source code for the visualization as well as instructions for running the visualization locally
+is in the scripts directory. 
 
 ## Other figures
 
