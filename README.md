@@ -14,6 +14,7 @@ Note that because of the GISAID [terms of use](https://www.gisaid.org/registrati
 - Genomic analyses reveal multiple virus importations into Guangdong Province, resulting in genetically distinct clusters that require careful interpretation.
 - Large-scale epidemiological surveillance and intervention measures were effective in interrupting community transmission in Guangdong
 
+![Graphical abstract](figures/graphical_abstract_final.jpg)
 
 ## Summary
 _COVID-19 is caused by the SARS-CoV-2 coronavirus and was first reported in central China in December 2019. Extensive molecular surveillance in Guangdong, China’s most populous province, during early 2020 resulted in 1,388 reported RNA-positive cases from 1.6 million tests. In order to understand the molecular epidemiology and genetic diversity of SARS-CoV-2 in China we generated 53 genomes from infected individuals in Guangdong using a combination of metagenomic sequencing and tiling amplicon approaches. Combined epidemiological and phylogenetic analyses indicate multiple independent introductions to Guangdong, although phylogenetic clustering is uncertain due to low virus genetic variation early in the pandemic. Our results illustrate how the timing, size and duration of putative local transmission chains were constrained by national travel restrictions and by the province’s large-scale intensive surveillance and intervention measures. Despite these successes, COVID-19 surveillance in Guangdong is still required as the number of cases imported from other countries has increased._
@@ -46,7 +47,7 @@ _COVID-19 is caused by the SARS-CoV-2 coronavirus and was first reported in cent
 
 
 ## MCC tree figure
-An interactive version of Figure 3B with options to zoom in on clades 
+An interactive version of Figure 3B with options to zoom in on clades and
 can toggle between lineage and location annotations can be found [here](https://laduplessis.github.io/SARS-CoV-2_Guangdong_genomic_epidemiology/).
 The source code for the visualization as well as instructions for running the visualization locally
 is in the scripts directory. 
