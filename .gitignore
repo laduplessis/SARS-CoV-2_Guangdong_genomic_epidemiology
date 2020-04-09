@@ -1,1 +1,21 @@
+# dependencies
+scripts/interactiveFigure/node_modules
+scripts/interactiveFigure/.pnp
+scripts/interactiveFigure/.pnp.js
+
+# testing
+scripts/interactiveFigure/coverage
+
+# production
+scripts/interactiveFigure/build
+
+# misc
 .DS_Store
+scripts/interactiveFigure/.env.local
+scripts/interactiveFigure/.env.development.local
+scripts/interactiveFigure/.env.test.local
+scripts/interactiveFigure/.env.production.local
+
+scripts/interactiveFigure/npm-debug.log*
+scripts/interactiveFigure/yarn-debug.log*
+scripts/interactiveFigure/yarn-error.log*

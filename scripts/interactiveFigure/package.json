@@ -1,0 +1,46 @@
+{
+  "name": "SARS-Cov2_Guangdon_genomic_epidemiology",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "http://laduplessis.github.io/SARS-CoV-2_Guangdong_genomic_epidemiology",
+  "dependencies": {
+    "@emotion/core": "^10.0.28",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "d3-array": "^2.4.0",
+    "d3-color": "^1.4.0",
+    "d3-scale": "^3.2.1",
+    "d3-scale-chromatic": "^1.5.0",
+    "d3-time-format": "^2.2.3",
+    "figtreejs-react": "git+https://git@github.com/jtmccr1/figtreejs-react.git#96534dc",
+    "gh-pages": "^2.2.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.1",
+    "react-tooltip": "^4.1.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
