@@ -32,6 +32,13 @@ _COVID-19 is caused by the SARS-CoV-2 coronavirus and was first reported in cent
 
 ## Phylogenetic analyses
 
+1. To build the maximum likelihood tree in PhyML: `phyml -i final_alignment_250.phy --quiet --run_id HKY+G`
+2. To run the BEAST analysis run the XML file in `results/beast/` (after adding in the genome sequences).
+3. To extract the SNP and gap statistics (for the mutational panel in Figure 2), create an alignment that is trimmed to the reference (MN908847.3) with the reference as the first sequence in the alignment and run:
+
+```
+python scripts/msastats.py -i results/alignments/final_alignment_trimmedToMN908947.fasta -f "|" -s 1 -o results/alignments/ -g
+```
 
 
 ## MCC tree figure
@@ -39,6 +46,7 @@ An interactive version of Figure 3B with options to zoom in on clades
 can toggle between lineage and location annotations can be found [here](https://laduplessis.github.io/SARS-CoV-2_Guangdong_genomic_epidemiology/).
 The source code for the visualization as well as instructions for running the visualization locally
 is in the scripts directory. 
+
 
 ## Other figures
 
