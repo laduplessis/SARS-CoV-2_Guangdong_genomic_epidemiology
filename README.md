@@ -33,10 +33,10 @@ _COVID-19 is caused by the SARS-CoV-2 coronavirus and was first reported in cent
 ## Data
 
 1. [cases-guangdong.csv](https://github.com/laduplessis/SARS-CoV-2_Guangdong_genomic_epidemiology/blob/master/data/cases_guangdong.csv): Numbers of reported cases in Guangdong.
-2. `data/samples.csv`: Sequencing samples collected in Guangdong.
-3. `data/sequences.csv`: Statistics of sequences generated from the samples in `samples.csv`.
-4. `data/final_alignment_GDHB.csv`: Taxon labels of sequences from Guangdong and Hubei in the final alignment.
-5. `data/GISAID_acknowledgements.txt`: Sequences used in the analyses.
+2. [samples.csv](https://github.com/laduplessis/SARS-CoV-2_Guangdong_genomic_epidemiology/blob/master/data/samples.csv): Sequencing samples collected in Guangdong.
+3. [sequences.csv](https://github.com/laduplessis/SARS-CoV-2_Guangdong_genomic_epidemiology/blob/master/data/sequences.csv): Statistics of sequences generated from the samples in `samples.csv`.
+4. [final_alignment_GDHB.csv](https://github.com/laduplessis/SARS-CoV-2_Guangdong_genomic_epidemiology/blob/master/data/final_alignment_GDHB.csv): Taxon labels of sequences from Guangdong and Hubei in the final alignment.
+5. [GISAID_acknowledgements.txt](https://github.com/laduplessis/SARS-CoV-2_Guangdong_genomic_epidemiology/blob/master/data/GISAID_acknowledgements.txt): Sequences used in the analyses.
 
 
 ## Phylogenetic analyses
@@ -54,6 +54,6 @@ is in the scripts directory.
 
 
 ## Other figures
-To reproduce the other figures, run the notebook `scripts/Figures.Rmd`, which creates `Figures.pdf`. Note that the notebook requires the SNP and gap statistics of the alignment for some figures, which are not stored on the repository (because of GISAID terms of use). 
+To reproduce the other figures, run the notebook `scripts/Figures.Rmd`, which creates [Figures.pdf](https://github.com/laduplessis/SARS-CoV-2_Guangdong_genomic_epidemiology/blob/master/scripts/Figures.pdf). Note that the notebook requires the SNP and gap statistics of the alignment for some figures, which are not stored on the repository (because of GISAID terms of use). 
 
 
