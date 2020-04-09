@@ -1,0 +1,867 @@
+---
+title: "SARS-CoV-2 Guangdong genomic epidemiology"
+subtitle: "Figure data and plots"
+author: "Louis du Plessis"
+date: '`r format(Sys.time(), "Last modified: %d %b %Y")`'
+output:
+  pdf_document:
+    toc: false
+    toc_depth: 3
+    number_sections: false
+    keep_tex: false
+    fig_crop: false
+layout: page
+editor_options: 
+  chunk_output_type: inline
+---
+
+
+```{r rsetup, include=FALSE}
+  
+    rm(list = ls())
+    library(cowplot)
+    source("plotFunctions.R")
+    source("treeutils.R")
+    
+    figpath <- "../results/figures/"
+    dir.create(figpath, recursive = TRUE, showWarnings = FALSE)
+    
+    knitr::opts_chunk$set(tidy=FALSE, cache=FALSE, results='hide', 
+                          dev="pdf", fig.path=figpath, fig.width=6.5, fig.height=4,
+                          message=FALSE, error=FALSE, warning=FALSE, echo=FALSE)
+    
+    
+    seqdb      <- read.csv("../data/sequences.csv", header=TRUE, na.strings = c("na",""))
+    sampledb   <- read.csv("../data/samples.csv", header=TRUE, na.strings="")
+    casedb_raw <- read.csv("../data/cases_guangdong.csv")
+    casedb_raw$symptom_onset <- as.Date(casedb_raw$symptom_onset)
+    
+    sequences <- read.csv("../data/final_alignment_GDHB.csv")
+    seqlen    <- 29903
+    
+    # Third Sunday in November 2019
+    startDate <- as.Date("2019-11-17")
+    
+    # Dates to label
+    labelDates <- as.Date(c("2020-01-19", "2020-01-23"))
+    
+```
+
+
+
+# Process datasets
+
+This section does some consistency checks to makes sure different spreadsheets agree with each other (e.g. no samples have different Ct values or collection dates). If no warnings are printed everything is ok.
+
+
+```{r processData, results='asis'}
+
+    # Sequencing platforms, 
+    # rename and define colours
+    ##############################
+    platformMap <- list("nanopore" = "Nanopore", 
+                        "BGI"      = "MGISEQ-2000\n(BGI)",
+                        "NextSeq"  = "NextSeq\n(Illumina)")
+    seqdb$sequencing_platform2 <- as.character(seqdb$sequencing_platform)
+    for (i in 1:nrow(seqdb)) {
+        seqdb$sequencing_platform2[i] <- platformMap[[seqdb$sequencing_platform2[i]]]
+    }
+    seqdb$sequencing_platform  <- as.factor(seqdb$sequencing_platform2)
+    seqdb$sequencing_platform2 <- NULL
+    
+    
+    colMap <- list("Nanopore"             = mPal(oxCols$blue1), 
+                   "MGISEQ-2000\n(BGI)"   = mPal(oxCols$green4), 
+                   "NextSeq\n(Illumina)"  = mPal(dark$orange))
+
+    fillMap <- list("Nanopore"           = mPal(oxCols$blue1, 0.5), 
+                    "MGISEQ-2000\n(BGI)"  = mPal(oxCols$green4, 0.5), 
+                    "NextSeq\n(Illumina)" = mPal(dark$orange, 0.5))
+    
+    
+    # Capitalise swab types
+    ########################
+    capitalise <- function(x) paste0( toupper(substr(x,1,1)), substr(x,2,nchar(x)) )
+    
+    sample_types <- c()
+    for (s in levels(sampledb$sample_type)) {
+        sample_types <- c(sample_types, gsub(" swabs","", capitalise(s)))
+    }
+    levels(sampledb$sample_type) <- sample_types
+    
+    
+    # Symptoms
+    ###########
+    symptoms <- c()
+    for (s in levels(sampledb$symptom)) {
+        symptoms <- c(symptoms, gsub("_", " ", capitalise(s)))
+    }
+    levels(sampledb$symptom) <- symptoms
+    sampledb$symptom[sampledb$symptom == "Asymptomatic"] <- "Mild"
+    sampledb$symptom <- factor(as.character(sampledb$symptom), c("Mild","Moderate","Severe","Critical"))
+    
+    # Coverage
+    ##########
+    seqdb$coverage <- seqdb$coverage*100
+
+
+  
+    # Match samples and sequences
+  
+    # Get Ct values for samples
+    # When Ct values are not unique, for now just select the smallest Ct value
+    sampledb$in_alignment <- rep(FALSE, nrow(sampledb))
+    sampledb$ct           <- rep(0, nrow(sampledb))
+    sampledb$seqdate      <- rep(as.Date("1970-01-01"), nrow(sampledb))
+    sampledb$maxcov       <- rep(0, nrow(sampledb))
+    
+    i <- 0
+    j <- 0
+    cat("Checking Ct values and collection dates...\n\n")
+    for (sample in levels(seqdb$sample_id)) {
+        ctvals <- unique(seqdb$ct[seqdb$sample_id == sample])
+        if (length(ctvals) > 1) {
+            cat(paste0(" - ",sample,": ", paste(seqdb$ct[seqdb$sample_id == sample], collapse=","), "\n"))  
+            i <- i + 1
+        }
+        sampledb$ct[sampledb$sample_id == sample] <- min(ctvals)
+        
+        seqdates <- unique(seqdb$collection_date[seqdb$sample_id == sample])
+        if (length(seqdates) > 1) {
+            cat(paste0(" - ",sample,": ", paste(seqdb$collection_date[seqdb$sample_id == sample], collapse=","), "\n"))  
+            j <- j + 1
+        }
+        sampledb$seqdate[sampledb$sample_id == sample] <- seqdates[1]
+        
+        sampledb$maxcov[sampledb$sample_id == sample] <- max(seqdb$coverage[seqdb$sample_id == sample])
+    }
+    wrongdates <- sampledb$sample_id[as.Date(sampledb$collection_date) != sampledb$seqdate]
+    if (i > 0) cat(paste("\n\n**Warning!**", i, " samples with multiple Ct-values!\n\n"))
+    if (j > 0) cat(paste("**Warning!**", j, " samples with multiple collection dates!\n\n"))
+    if (length(wrongdates) > 0) cat(paste("**Warning!**\n These sequences have different sample and sequence collection dates: ", paste(wrongdates, collapse=", "), "\n\n"))
+    
+    sampledb$maxcov[is.na(sampledb$maxcov)] <- 0
+    
+    # Get in alignment for samples
+    alignsamples <- seqdb$sample_id[seqdb$include, drop=TRUE]  
+    for (sample in alignsamples) {
+        sampledb$in_alignment[sampledb$sample_id == sample] <- TRUE
+    }
+    
+    # Get infection location and onset date for sequences
+    seqdb$symptom_onset     <- rep(as.Date("1970-01-01"), nrow(seqdb))
+    seqdb$infection_location <- factor(rep(NA, nrow(seqdb)), levels=levels(sampledb$infection_location))
+    for (i in 1:nrow(seqdb)) {
+        idx <- which(sampledb$sample_id == seqdb$sample_id[i])
+        if (length(idx) != 0) {
+            seqdb$symptom_onset[i]      <- sampledb$Cli_onset_date[idx]
+            seqdb$infection_location[i] <- sampledb$infection_location[idx]
+        } else {
+            cat(paste("\n\n**Warning!** something wrong with ", as.character(seqdb$sample_id[i]), "! (not exactly one entry in sample DB)\n\n"))
+        }
+    }
+    
+    # Get GISAID accessions of sequences in alignment
+    sequences$collection_date <- as.Date(sequences$collection_date)
+    seqidxs   <- c()
+    for (i in 1:nrow(seqdb)) {  
+        if (seqdb$include[i]) {
+            seqidx <- grep(seqdb$sample_id[i], sequences$name)
+            seqidxs <- c(seqidxs, seqidx)
+        } else {
+            seqidxs <- c(seqidxs, NA)
+        }
+    }
+    seqdb$accession <- sequences$accession[seqidxs, drop=TRUE]
+
+
+    # Save files
+    outpath <- "../results/"
+    dir.create(outpath, recursive = TRUE, showWarnings = FALSE)
+    
+    write.csv(sampledb, paste0(outpath,"sampledb.csv"), quote=FALSE, row.names = FALSE)
+    write.csv(sampledb[sampledb$in_alignment,], paste0(outpath,"sampledb_alignment.csv"), quote=FALSE, row.names = FALSE)
+    
+    seqdb2 <- seqdb
+    levels(seqdb2$sequencing_platform) <- gsub("\n"," ", levels(seqdb2$sequencing_platform))
+    write.csv(seqdb2, paste0(outpath,"seqdb.csv"), quote=FALSE, row.names = FALSE)
+
+
+```
+
+\clearpage
+
+# Figure 1: Cases and Sequences
+
+
+```{r Fig1-data, fig.height=6.5}
+    
+    # Set up Case database
+    # Extend from startDate and make sure that all dates are included
+    endDate  <- max(casedb_raw$symptom_onset)
+    caseDates <- seq.Date(startDate, endDate, by="days")
+    k <- length(caseDates)
+    casedb <- data.frame(symptom_onset      = caseDates, 
+                         local_guangdong    = rep(0,k),
+                         import_china_other = rep(0,k), 
+                         import_other       = rep(0,k),
+                         all                = rep(0,k))
+    
+    for (i in 1:nrow(casedb_raw)) {
+        idx <- which(casedb$symptom_onset == casedb_raw$symptom_onset[i]) 
+        if (length(idx) > 0) {
+            casedb[idx, ] <- casedb_raw[i, ]
+        }
+    }
+    
+    
+    # Cases #  
+    #########
+
+    caseCounts <- t(as.matrix(casedb[, c("import_other", "import_china_other", "local_guangdong")]))
+    colnames(caseCounts) <- format.Date(casedb$symptom_onset, format="%b %d")
+    
+
+    # Sequences #    
+    #############
+    
+    seqlist <- casedb
+    seqlist$local_guangdong <- seqlist$import_china_other <- seqlist$previous <- rep(0, nrow(seqlist))
+    seqlist$all <- seqlist$import_other <- NULL
+    colnames(seqlist)[1] <- "collection_date"
+    
+    sampledb$collection_date <- as.Date(sampledb$collection_date)
+    for (i in 1:nrow(sampledb)) {
+        if (sampledb$in_alignment[i] == TRUE) {
+            idx <- which(seqlist$collection_date == sampledb$collection_date[i])
+            if (!is.na(sampledb$infection_location[i]) && 
+                       sampledb$infection_location[i] == "guangdong") {
+                seqlist$local_guangdong[idx] <- seqlist$local_guangdong[idx]+1    
+            } else {
+                seqlist$import_china_other[idx] <- seqlist$import_china_other[idx]+1
+            }
+        }
+    }
+    
+    j <- 1
+    for (i in 1:nrow(sequences)) {
+        if (!(sequences$accession[i] %in% seqdb$accession[seqdb$include]) && sequences$province[i] == "Guangdong") {
+            idx <- which(seqlist$collection_date == sequences$collection_date[i])
+            seqlist$previous[idx] <- seqlist$previous[idx] + 1
+        }
+    }
+    
+    seqCounts <- t(as.matrix(seqlist[, c("previous","import_china_other", "local_guangdong")]))
+    colnames(seqCounts) <- format.Date(seqlist$collection_date, format="%b %d")
+    
+
+```
+
+
+
+```{r Fig1-stacked, fig.width=6.5, fig.height=6.5}
+    
+    alpha <- 0.5
+
+    # Plot from the last Monday in December to the last recorded day
+    plotStart <- which(colnames(caseCounts) == "Dec 29")
+    plotEnd   <- ncol(caseCounts)
+
+    par(mar=c(4,4,2,5))
+    layout(matrix(1:2,nrow=2), heights=c(3,3))
+    
+    # Panel B - Cases #  
+    ###################
+    plotCounts(casedb$symptom_onset[plotStart:plotEnd], caseCounts[, plotStart:plotEnd], 
+               labelDates = labelDates, 
+               beside=FALSE, plotCumSum = TRUE, alpha=alpha, ylim=c(0,120), plotLabel="A")
+    
+    legend("topright", inset=c(0,0.1), bty='n', xpd=TRUE, cex=0.8,
+            legend = c("Imported from other provinces", "Local infection (Guangdong)", "Imported from other countries"), 
+            fill   = c(mPal(oxCols$blue1, alpha), mPal(oxCols$green4, alpha), mPal(dark$orange, alpha)),
+            border = c(mPal(oxCols$blue1),        mPal(oxCols$green4),        mPal(dark$orange)))
+
+
+  
+    
+    # Panel C - Sequences #   
+    par(mar=c(4,4,2,5))
+    plotCounts(seqlist$collection_date[plotStart:plotEnd], seqCounts[, plotStart:plotEnd], beside=FALSE, ylim=c(0,20), col_other = oxCols$gray6, 
+               ylab="Sequences", xlab="Collection date", plotLabel="B")
+    
+    legend("topleft", inset=c(0,0), bty='n', xpd=TRUE, cex=0.8,
+            legend = c("Imported from other provinces", "Local infection (Guangdong)", "Previously released"), 
+            fill   = c(mPal(oxCols$blue1, alpha), mPal(oxCols$green4, alpha), mPal(oxCols$gray6, alpha)),
+            border = c(mPal(oxCols$blue1),        mPal(oxCols$green4),        mPal(oxCols$gray6)))
+
+    
+```    
+    
+    
+\clearpage
+
+# Fig 1 - Non-stacked
+
+
+```{r Fig1-beside, fig.height=6.5}
+    
+    alpha <- 0.5
+    par(mar=c(4,4,2,5))
+    layout(matrix(1:2,nrow=2))
+
+    # Panel B - Cases #  
+    ###################
+    plotCounts(casedb$symptom_onset[plotStart:plotEnd], caseCounts[,plotStart:plotEnd], beside=TRUE, plotCumSum = TRUE, 
+               labelDates = labelDates, 
+               alpha=alpha, ylim=c(0,100), plotLabel="B")
+    #legend("top", horiz=TRUE, inset=c(0,-0.15), bty='n', xpd=TRUE, cex=0.8,
+    legend("topright", inset=c(0,0.1), bty='n', xpd=TRUE, cex=0.8,
+            legend = c("Imported from other provinces", "Local infection (Guangdong)", "Imported from other countries"), 
+            fill   = c(mPal(oxCols$blue1, alpha), mPal(oxCols$green4, alpha), mPal(dark$orange, alpha)),
+            border = c(mPal(oxCols$blue1),        mPal(oxCols$green4),        mPal(dark$orange)))
+    
+    # Panel C - Sequences #    
+    #######################
+    plotCounts(seqlist$collection_date[plotStart:plotEnd], seqCounts[,plotStart:plotEnd], beside=TRUE, ylim=c(0,20), col_other = oxCols$gray6, 
+               ylab="Sequences", xlab="Collection date", plotLabel="C")
+    
+    legend("topleft", inset=c(0,0), bty='n', xpd=TRUE, cex=0.8,
+        legend = c("Imported from other provinces", "Local infection (Guangdong)", "Previously released"), 
+        fill   = c(mPal(oxCols$blue1, alpha), mPal(oxCols$green4, alpha), mPal(oxCols$gray6, alpha)),
+        border = c(mPal(oxCols$blue1),        mPal(oxCols$green4),        mPal(oxCols$gray6)))
+
+```
+
+
+```{r Fig1-surveillance, fig.width=6.5, fig.height=1.5}
+
+    par(mar=c(0,4,2,5))
+    plot(1, type='n', ylim=c(0,10), xlim=as.Date(casedb$symptom_onset[c(plotStart, plotEnd)]),
+         xaxs='i', yaxs='i', bty='n', axes=FALSE, xlab="", ylab="")
+    rect(as.Date("2019-12-30"), 8, casedb$symptom_onset[plotEnd], 9, border=NA, col=mPal(oxCols$gray6))
+    text(x=as.Date("2020-02-08"),y=6, "21 Prefecture CDCs and designated hospitals", pos=3, cex=0.8)
+
+    rect(as.Date("2020-01-30"), 5, casedb$symptom_onset[plotEnd], 6,  border=NA, col=mPal(oxCols$gray6))
+    text(x=as.Date("2020-02-24"),y=3, "6 third-party detection institutions", pos=3, cex=0.8)
+
+    rect(as.Date("2020-03-09"), 2, casedb$symptom_onset[plotEnd], 3,  border=NA, col=mPal(oxCols$gray6))
+    text(x=as.Date("2020-03-09"),y=0, "Airport enhanced surveillance", pos=3, xpd=TRUE, cex=0.8)
+
+    text(x=rep(casedb$symptom_onset[plotEnd],3), y=c(8, 5, 2),
+         c("329,864 tests", "1,348,973 tests", "7,909 tests"),
+         pos=4, srt=45, cex=0.8, col=mPal(oxCols$red2), xpd=TRUE)
+
+```
+
+\clearpage
+
+
+# Figure 2: Sequencing Statistics
+
+    
+```{r Fig2a_ct-vs-cov, fig.width=3.5, fig.height=3.5}
+   
+    par(mar=c(4,4,2,1))
+    plotScatter(seqdb[seqdb$include, ], x="ct", y="coverage", col="sequencing_platform", 
+                colMap=colMap, fillMap=fillMap, 
+                xlab="Ct", ylab="Coverage (%)", las=1, cex=0.8, 
+                plotLegend=TRUE, plotGrid=TRUE)
+    
+    
+```
+
+
+
+```{r Fig2d-alignment, fig.width=7.5, fig.height=10}
+
+
+      statpath  <- "../results/alignments/"
+      
+      alignment <- seqdb[seqdb$include,]
+      seqorder  <- order(alignment$coverage)
+      
+      names <- alignment$sample_id[seqorder]
+      accessions <- c()
+      seqnames   <- c()
+      cols       <- c()
+      fill       <- c()
+      for (name in names) {
+          idx <- grep(name, sequences$name)
+          #print(paste(name, idx, sequences$name[idx]))
+          accessions <- c(accessions, as.character(sequences$accession[idx]))
+          
+          seqnames <- c(seqnames, paste0(as.character(sequences$accession[idx]), " (", round(alignment$coverage[alignment$sample_id == name],2), "%)"))
+          
+          platform  <- as.character(alignment$sequencing_platform[alignment$sample_id == name])
+          cols <- c(cols, colMap[[platform]])
+          fill <- c(fill, fillMap[[platform]])
+      }
+      snpFiles <- paste0(statpath, "MN908947_", accessions, ".snps.csv")
+      gapFiles <- paste0(statpath, "MN908947_", accessions, ".gaps.csv")
+
+      par(mar=c(0,3,3,10), mgp=c(3,0.25,0))
+      
+      layout(matrix(1:2, nrow=2), heights = c(4,1))
+      allSNPs <- plotAlignment(snpFiles, gapFiles, seqlen, names=seqnames, cex.axis=0.6, 
+                    plotStats=FALSE, plotGrid=FALSE, plotXAxis = FALSE,
+                    seqCol = fill, bgCol="#00000000")
+      
+      legend("topleft", horiz = TRUE, inset=c(0,-0.1), border=NA, bty='n', xpd=TRUE, 
+             fill=sapply(names(colMap), function(x) colMap[[x]]), legend=names(colMap))
+
+      par(mar=c(3,3,1,10), mgp=c(3,0.5,0))
+      plotSNPHist(allSNPs, plotGrid = TRUE, cex.axis=0.6, cutoff=3, col=mPal(oxCols$oxblue))
+```
+
+
+
+```{r Fig2-composite, fig.width=7.5, fig.height=6}
+
+      layout(matrix(c(6,1,2,3,6,4,4,5), ncol=2, byrow=FALSE), heights = c(1,2,3,3), widths=c(1,2))
+
+
+      # Panel A - Ct vs Coverage
+        par(mar=c(3,5,0,1), cex.lab=1.2, cex.axis=1, mgp=c(2,0.5,0))
+        xlim <- c(18,40)
+        plotScatter(seqdb[seqdb$include, ], x="ct", y="coverage", col="sequencing_platform", 
+                  colMap=colMap, fillMap=fillMap, xlim=xlim, 
+                  xlab="Ct", ylab="Coverage (%)", las=1, cex=0.8, 
+                  plotLegend=FALSE, plotGrid=TRUE)
+        
+        mtext(side=3, "A", at=xlim[1]-0.3*diff(xlim), line=0, cex=1.5)
+
+      
+      # Panels B and C - Boxplots
+        sample_type_ct <- sample_type_cov <- list()
+        for (l in levels(sampledb$sample_type)) {
+            idxs <- sampledb$sample_type == l
+            name <- paste0(l, " (n = ", sum(idxs), ")")
+            
+            sample_type_ct[[name]]  <- sampledb$ct[idxs]
+            sample_type_cov[[name]] <- sampledb$maxcov[idxs]
+        }
+        
+        symptom_ct <- symptom_cov <- list()
+        for (l in levels(sampledb$symptom)) {
+            idxs <- sampledb$symptom == l
+            name <- paste0(l, " (n = ", sum(idxs, na.rm=TRUE), ")")
+            
+            if (sum(idxs, na.rm=TRUE) > 0 & l != "Unknown") {
+                symptom_ct[[name]]  <- sampledb$ct[sampledb$symptom == l]
+                symptom_cov[[name]] <- sampledb$maxcov[sampledb$symptom == l]
+            }
+        }
+
+    
+        par(mar=c(7.5,5,1,1))  
+        xlim <- c(0.5, 4.5)
+        
+        plotStats(sample_type_ct, ylim=c(15,45), ylab="Ct")
+        text(x=(1:4) + 0.5, y=13, srt=45, labels=names(sample_type_ct), xpd=TRUE, cex=1, pos=2)
+        mtext(side=3, "B", at=xlim[1]-0.3*diff(xlim), line=0, cex=1.5)
+
+        
+        plotStats(symptom_ct, ylim=c(15,45), ylab="Ct")
+        text(x=(1:4) + 0.5, y=13, srt=45, labels=names(symptom_ct), xpd=TRUE, cex=1, pos=2)
+        mtext(side=3, "C", at=xlim[1]-0.3*diff(xlim), line=0, cex=1.5)
+        
+
+        
+        
+        
+      # Panel D - Alignment    
+        statpath  <- "../results/alignments/"
+        
+        alignment <- seqdb[seqdb$include,]
+        seqorder  <- order(alignment$coverage)
+        
+        names <- alignment$sample_id[seqorder]
+        accessions <- c()
+        seqnames   <- c()
+        cols       <- c()
+        fill       <- c()
+        for (name in names) {
+            idx <- grep(name, sequences$name)
+            #print(paste(name, idx, sequences$name[idx]))
+            accessions <- c(accessions, as.character(sequences$accession[idx]))
+            
+            seqnames <- c(seqnames, paste0(as.character(sequences$accession[idx]), " (", round(alignment$coverage[alignment$sample_id == name],2), "%)"))
+            
+            platform  <- as.character(alignment$sequencing_platform[alignment$sample_id == name])
+            cols <- c(cols, colMap[[platform]])
+            fill <- c(fill, fillMap[[platform]])
+        }
+        snpFiles <- paste0(statpath, "MN908947_", accessions, ".snps.csv")
+        gapFiles <- paste0(statpath, "MN908947_", accessions, ".gaps.csv")
+  
+        
+        par(mar=c(1,3,0,2))
+        xlim <- c(0, seqlen)
+
+        
+        allSNPs <- plotAlignment(snpFiles, gapFiles, seqlen, names=rep("", length(seqnames)), cex.axis=0.6, 
+                      plotStats=FALSE, plotGrid=FALSE, plotXAxis = FALSE,
+                      seqCol = fill, bgCol="#00000000")
+        mtext(side=3, "D", at=xlim[1]-0.05*diff(xlim), line=0, cex=1.5)
+
+        
+        # Panel D - Histogram of SNPs
+        par(mar=c(3,3,3,2))
+        plotSNPHist(allSNPs, plotGrid = TRUE, cex.axis=1)
+        mtext(side=3, "E", at=xlim[1]-0.05*diff(xlim), line=2, cex=1.5)
+
+        
+        # Legend
+        par(mar=rep(0,4))
+        plot(1, type='n', bty='n', axes=FALSE)
+        legend("top", horiz = TRUE, inset=c(0,0), bty='n', cex=1.2,
+               fill=sapply(names(fillMap), function(x) fillMap[[x]]), 
+               border=sapply(names(colMap), function(x) colMap[[x]]),
+               legend=names(fillMap))
+
+
+``` 
+
+
+
+## Kruskal-Wallis H-test
+
+```{r tests, results='markup'}
+
+    ct_vs_symptom     <- kruskal.test(ct ~ symptom, data=sampledb)
+    ct_vs_sample_type <- kruskal.test(ct ~ sample_type, data=sampledb)
+    
+    print(ct_vs_symptom)
+    print(ct_vs_sample_type)
+```    
+    
+
+\clearpage
+
+# Fig 3A
+
+```{r Fig3a, fig.width=2.5, fig.height=3.5}
+
+    msalen <- 29923
+  
+    # ML tree from PhyML, rooted and saved from FigTree in NEXUS format
+    mltree     <- read.beast("../results/phyml/final_alignment_250.phy_phyml_tree_HKY+G.rootedAB.tree")
+    metadata   <- getMetadata(mltree@phylo$tip.label)
+    mostrecent <- lubridate::decimal_date(max(metadata$date))  
+    
+    mcctree    <- addNodeHeights(read.beast("../results/beast/MCC_tree.tree"))
+    mcctree@data$posterior <- round(mcctree@data$posterior, 2)
+    mccmeta    <- getMetadata(mcctree@phylo$tip.label)
+    
+    # Cluster lookup table
+    
+    clusters <- read.table("../results/beast/taxon_annotations.tsv", header = TRUE)
+    clusters$cluster <- factor(clusters$taxon_set)
+    clusterNames     <- levels(clusters$cluster)
+    
+    # Use short ids for legibility
+    mcctree@phylo$tip.label <- as.character(mccmeta$accession) 
+    metadata$taxon <- mltree@phylo$tip.label <- as.character(metadata$accession) #
+    clusters$sequence_label <- paste(getSeqParts(as.character(clusters$taxa), 2)) 
+                                     
+    clusternodes <- sapply(clusterNames, function(x) getMRCA(mltree@phylo, getClusterIds(x, clusters)))
+  
+    mrca  <- max(getBranchingTimes(mltree@phylo))
+    mutations <- 0:ceiling(mrca*msalen)
+    
+    p <- getTreePlot(mltree, metadata, plotCountry=FALSE, plotIds=FALSE, plotTipPoints=TRUE, plotAxis=FALSE, seqlen=msalen, size=0.25, 
+                     timeTree=FALSE, plotSupport=FALSE, highlighted_tips=metadata$taxon[metadata$province == "Guangdong"]) + 
+                 theme_tree2(panel.grid.major = element_line(colour = mPal(oxCols$gray3), size=0.15, linetype = "dotted"), 
+                             axis.line.x=element_line(size=0.25), axis.ticks.x=element_line(size=0.25), axis.text.x = element_text(size=6)) + 
+                 scale_y_continuous(breaks=NULL, expand=c(0,10)) + 
+                 scale_x_continuous(breaks = mutations/msalen, 
+                                    labels=mutations, 
+                                    limits=c(0, max(mutations)/msalen),
+                                    expand=c(0.1,0))
+      
+    p <- annotateClusters(p, clusternodes, fontsize=2.5, offset=5E-6, offset.text=5E-6, extend=1)
+    print(p)
+
+```
+
+
+\clearpage
+
+# Figure 4 - TaxonSet Ages
+
+
+```{r Fig4-data}
+
+
+    cutoff <- 0.75
+    path <- "../results/beast/"
+    trace <- readLog(paste0(path, "combined_log_file.log"), burnin = 0)
+    
+    taxonSetAges <- getLogFileSubset(trace, "age")
+    monophyly    <- getLogFileSubset(trace, "monophyly.taxon")
+    monophyly    <- apply(monophyly, 2, mean)
+    
+    selection <- c("age.root.")
+    for (taxonSet in names(monophyly)) {
+        if (monophyly[taxonSet] >= cutoff) {
+            taxonSet <- paste0("age", gsub("monophyly","", taxonSet))
+            selection <- c(selection, taxonSet)
+        }
+    }
+    taxonSetAges    <- taxonSetAges[, selection]
+    taxonSetNames   <- gsub("\\.", "", gsub("age\\.taxon_set_","", varnames(taxonSetAges)))
+
+    samples <- read.table(paste0(path, "/taxon_annotations.tsv"), header = TRUE)
+    samples$accession         <- getSeqParts(as.character(samples$taxa), group=2)
+    samples$country           <- getSeqParts(as.character(samples$taxa), group=3)
+    samples$province          <- getSeqParts(as.character(samples$taxa), group=4)
+    samples$city              <- getSeqParts(as.character(samples$taxa), group=5)
+    samples$collection_date   <- as.Date(getSeqParts(as.character(samples$taxa), group=6))
+    samples$decimal_date      <- lubridate::decimal_date(samples$collection_date)
+    levels(samples$taxon_set) <- sapply(levels(samples$taxon_set), function(x) paste("Cluster",x))
+    
+    samples$infection_location <- factor( rep(NA, nrow(samples)), levels=levels(seqdb$infection_location))
+    samples$symptom_onset      <- rep(as.Date("1970-01-01"), nrow(samples))
+    for (i in 1:nrow(samples)) {
+        
+        if (samples$accession[i] %in% seqdb$accession) {
+            idx <- which(seqdb$accession == samples$accession[i])   
+            samples$infection_location[i] <- seqdb$infection_location[idx] 
+            samples$symptom_onset[i]      <- seqdb$symptom_onset[idx] 
+        }
+    }
+    samples$symptom_onset[samples$symptom_onset == as.Date("1970-01-01")] <- NA
+    
+
+    taxonSetNames <- sapply(taxonSetNames, function(x) ifelse(x == "ageroot", "tMRCA", as.character(samples$taxon_set[which(samples$taxon_set_number == as.numeric(x))[1]])))
+    
+```    
+    
+
+```{r Fig4-taxonAges-alt, fig.width=7.5, fig.height=6}
+
+
+    par(mar=c(4,5,1.5,5))
+    layout(matrix(1:2,nrow=2), heights=c(1,2))
+
+    # Panel A - Cases #  
+    ###################
+    alpha <- 0.5
+    endDate   <- as.Date("2020-03-01")
+    plotStart <- which(colnames(caseCounts) == format.Date(startDate, format="%b %d"))
+    plotEnd   <- which(colnames(caseCounts) == format.Date(endDate,   format="%b %d"))
+    
+    caseCounts2 <- caseCounts
+    caseCounts2[1, ] <- caseCounts2[1, ] + caseCounts2[2, ]
+    caseCounts2[2, ] <- rep(0, ncol(caseCounts2))
+    
+    plotCounts(casedb$symptom_onset[plotStart:plotEnd], caseCounts2[,plotStart:plotEnd], beside=TRUE, plotCumSum = FALSE, ylab="Cases", plotGrid=FALSE,
+               alpha=alpha, ylim=c(0,100), plotLabel="A", col_local = oxCols$red2, col_other = oxCols$gray6, col_china = oxCols$gray6, labelDates=labelDates)
+    legend("topleft", inset=c(0,0), bty='n', xpd=TRUE, cex=1,
+            legend = c("Imported cases", "Local infection (Guangdong)"), 
+            fill   = c(mPal(oxCols$gray6, alpha), mPal(oxCols$red2, alpha)),
+            border = c(mPal(oxCols$gray6),        mPal(oxCols$red2)))
+
+
+    # Panel B - Taxon Sets #  
+    ###################
+    
+    par(mar=c(3,5,2,5))
+    plotOrder <- c(1,6:2)
+    plotTaxonSets(taxonSetAges[, plotOrder], samples, names=taxonSetNames[plotOrder], bw=1/365, sampleCol=oxCols$red2, dateRange = c(startDate, endDate), ylab="", maxwidth = 1, 
+                  plotSymptomOnset = FALSE, plotLabel="B")
+    
+
+```
+
+
+\clearpage
+
+# Supplementary figures (or not included)
+
+
+```{r FigSX_ct-vs-cov-all, fig.width=3.5, fig.height=7}
+    
+    # Drop all samples with such low coverage we didn't assemble
+    seqdb$logMappedReads <- log(seqdb$mapped.reads)
+    seqdb2 <- seqdb[-which(is.na(seqdb$coverage)), ]
+
+    par(mar=c(4,4,2,1))
+    layout(matrix(1:2, nrow=2))
+    
+    xlim <- c(18,45)
+    plotScatter(seqdb2[!seqdb2$include, ], x="ct", y="coverage", col="sequencing_platform", 
+                colMap=colMap, fillMap=NULL, plotLegend=FALSE,
+                xlab="Ct", ylab="Coverage (%)", xlim=xlim)
+    plotScatter(seqdb2[seqdb2$include, ], x="ct", y="coverage", col="sequencing_platform", 
+                colMap=colMap, fillMap=fillMap,
+                cex=0.8, 
+                plotLegend=TRUE,  add=TRUE, plotGrid=FALSE)
+    mtext(side=3, "A", at=xlim[1]-0.35*diff(xlim), line=0.5, cex=1.5)
+
+    xlim <- c(4,16)
+    plotScatter(seqdb[!seqdb$include, ], x="logMappedReads", y="coverage", col="sequencing_platform", 
+                colMap=colMap, fillMap=NULL, plotLegend=FALSE, 
+                xlab="log(mapped reads)", ylab="Coverage (%)", xlim=xlim)
+    plotScatter(seqdb[seqdb$include, ], x="logMappedReads", y="coverage", col="sequencing_platform", 
+                colMap=colMap, fillMap=fillMap,
+                cex=0.8, 
+                plotLegend=FALSE,  add=TRUE, plotGrid=FALSE)
+    mtext(side=3, "B", at=xlim[1]-0.35*diff(xlim), line=0.5, cex=1.5)
+
+
+```
+
+
+
+
+
+```{r FigSX-alignment_GDHB, fig.width=7.5, fig.height=12}
+
+
+      fillMap[["Previously\nreleased"]] <- colMap[["Previously\nreleased"]] <- mPal(oxCols$gray6, 0.5)
+
+      alignment <- seqdb[seqdb$include,]
+      seqorder  <- order(alignment$coverage)
+      
+      names <- alignment$sample_id[seqorder]
+      accessions <- c()
+      seqnames   <- c()
+      cols       <- c()
+      fill       <- c()
+      idxs       <- c()
+      
+      # Get order and platform for new sequences
+      for (name in names) {
+          idx <- grep(name, sequences$name)
+          idxs <- c(idxs, idx)
+          #print(paste(name, idx, sequences$name[idx]))
+          
+          platform  <- as.character(alignment$sequencing_platform[alignment$sample_id == name])
+          cols <- c(cols, colMap[[platform]])
+          fill <- c(fill, fillMap[[platform]])
+      }
+      # Since all the new sequences are at the end of the alignment
+      n     <- min(idxs)-1
+      idxs  <- c(idxs, n:1)
+      cols  <- c(cols, rep(colMap[["Previously\nreleased"]], n))
+      fill  <- c(fill, rep(fillMap[["Previously\nreleased"]], n))
+      
+      accessions <- sequences$accession[idxs]
+      seqnames   <- paste0(accessions, " (", sequences$province[idxs], ", ", sequences$city[idxs], ")")
+      
+      snpFiles <- paste0(statpath, "MN908947_", accessions, ".snps.csv")
+      gapFiles <- paste0(statpath, "MN908947_", accessions, ".gaps.csv")
+
+
+      
+      
+      layout(matrix(1:2, ncol=1), heights = c(7,2))
+      # Panel A - Alignment   
+        par(mar=c(1,2,2,12))
+        xlim <- c(0, seqlen)
+
+        allSNPs <- plotAlignment(snpFiles, gapFiles, seqlen, names=seqnames, cex.axis=0.6, 
+                      plotStats=FALSE, plotGrid=FALSE, plotXAxis = FALSE,
+                      seqCol = fill, bgCol="#00000000", plotNames=FALSE)
+        mtext(side=3, "A", at=xlim[1]-0.05*diff(xlim), line=0.5, cex=1.5)
+        
+        # Legend
+        legend("topleft", horiz = TRUE, inset=c(0,-0.05), bty='n', cex=0.8, xpd=TRUE,
+               fill=sapply(names(fillMap), function(x) fillMap[[x]]), 
+               border=sapply(names(colMap), function(x) colMap[[x]]),
+               legend=names(fillMap))
+        
+        # Shading
+        offset <- seqlen
+        for (i in 1:length(idxs)) {
+            if (i %% 2 == 0) {
+                rect(offset, i-0.5, offset+20000, i+0.5, col="#EDEDED", border=NA, xpd=TRUE)
+            }
+        }
+        rect(1,0.5, seqlen, length(idxs)+0.5, xpd=TRUE)
+
+
+        text(x=seqlen,       y=1:length(idxs), labels = sequences$accession[idxs], xpd=TRUE, cex=0.5, pos=4)
+        text(x=seqlen+6000,  y=1:length(idxs), labels = sequences$province[idxs], xpd=TRUE, cex=0.5, pos=4)
+        text(x=seqlen+11000, y=1:length(idxs), labels = sequences$city[idxs], xpd=TRUE, cex=0.5, pos=4)
+
+        
+      # Panel B - Histogram of SNPs
+        par(mar=c(3,2,3,12))
+        plotSNPHist(allSNPs, plotGrid = TRUE, cex.axis=1, cutoff = 5)
+        mtext(side=3, "B", at=xlim[1]-0.05*diff(xlim), line=2, cex=1.5)
+
+        
+
+      
+```
+
+```{r FigSX_root-to-tip, fig.width=4, fig.height=4}
+
+    tempest <- read.table("../results/phyml/final_alignment_250.phy_phyml_tree_HKY+G.rootedAB.tempest.tsv", header=TRUE)
+    
+    tempest$accession <- getSeqParts(as.character(tempest$tip), group=2)
+    tempest$country   <- getSeqParts(as.character(tempest$tip), group=3)
+    tempest$province  <- getSeqParts(as.character(tempest$tip), group=4)
+    tempest$city      <- getSeqParts(as.character(tempest$tip), group=5)
+    tempest$calendar  <- getSeqParts(as.character(tempest$tip), group=6)
+    tempest$province[tempest$province != "Guangdong"] <- "Other"
+    tempest$province <-  factor(tempest$province, levels=c("Other", "Guangdong"))
+    
+    provinceColMap <- list("Guangdong"=mPal(oxCols$red2), 
+                           "Other"    =mPal(oxCols$gray6))
+    
+    
+    provinceFillMap <- list("Guangdong"=mPal(oxCols$red2,0.5), 
+                            "Other"    =mPal(oxCols$gray6,0.5))
+    
+    par(mar=c(4,4,2,1), mgp=c(3,0.5,0))
+    xlim <- c(2019.95,2020.2)
+    plotScatter(tempest, x="date", y="distance", col="province", 
+                colMap=provinceColMap, fillMap=provinceFillMap, 
+                xlab="Collection date", ylab="Root-to-tip distance", las=1, cex=0.8, 
+                xlim=xlim, ylim=c(0,4E-4), legendOffset=-0.1,
+                plotLegend=TRUE, plotGrid=TRUE)
+    
+    abline(linmod <- lm(tempest$distance ~ tempest$date), lty=1, lwd=2, col=mPal(oxCols$red2))
+    text(xlim[1], 3.5E-4, 
+         paste("r =",round(cor(tempest$distance, tempest$date),3)), 
+         xpd=TRUE, pos=4, col=mPal(oxCols$red2))
+
+```
+
+
+```{r FigSX-Clusters, fig.width=6, fig.height=8} 
+
+    startDates <- rep(as.Date(c("2020-01-05")),5)
+    endDates   <- rep(as.Date(c("2020-03-08")),5)
+    
+    plotList <- list()
+    plotLabels <- c("A", "", "B", "", "C", "", "D", "", "E", "")
+    i <- 1
+    for (cluster in clusterNames) {
+      
+        plotList[[plotLabels[i]]]   <- getClusterTreePlot(cluster, clusters, mltree, metadata, levels_back=0, seqlen=seqlen, plotAxis=TRUE, plotScale=FALSE, scaleWidth=1E-5,
+                                           highlighted_taxa=metadata$taxon[metadata$province == "Guangdong"], timeTree=FALSE, size=0.25)
+
+        plotList[[plotLabels[i+1]]] <- getClusterTreePlot(cluster, clusters, mcctree, metadata, levels_back=0,  shadeClade=FALSE,
+                                           xtickBy='weeks', plotStart=startDates[(i+1)/2], plotEnd=endDates[(i+1)/2],
+                                           highlighted_taxa=metadata$taxon[metadata$province == "Guangdong"], timeTree=TRUE, plotNodeBars=TRUE, size=0.25)
+        
+        i <- i + 2
+    }
+    
+    print(plot_grid(plotlist = plotList, ncol=2, labels = plotLabels, label_fontface = "plain", align='hv'))
+```
+
+
+\clearpage
+
+
+# Session info
+
+```{r sessionInfo, results='markup'}
+    sessionInfo()
+```
+

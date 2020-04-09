@@ -1,80 +1,80 @@
 patient_id,sample_id,collection_date,Cli_onset_date,sample_type,symptom,infection_location,prefecture_short,prefecture
-P0001,GDSZ202010,05/02/2020,25/01/2020,oropharyngeal swabs,,guangdong,SZ,Shenzhen
-P0002,GD2020331,09/02/2020,28/01/2020,nasopharyngeal swabs,moderate,hubei,GZ,Guangzhou
-P0003,GDSZ202003,05/02/2020,26/01/2020,oropharyngeal swabs,moderate,hubei,SZ,Shenzhen
-P0004,GDSZ202004,05/02/2020,27/01/2020,oropharyngeal swabs,severe,hubei,SZ,Shenzhen
-P0005,GDFS2020054,10/02/2020,26/01/2020,sputum,critical,guangdong,FS,Foshan
-P0006,GD2020264,09/02/2020,29/01/2020,anal swab,moderate,guangdong,GZ,Guangzhou
-P0006,GD2020336,09/02/2020,29/01/2020,nasopharyngeal swabs,moderate,guangdong,GZ,Guangzhou
-P0007,GD2020139,02/02/2020,24/01/2020,sputum,critical,other,GZ,Guangzhou
-P0008,GD2020087,01/02/2020,,sputum,,,GZ,Guangzhou
-P0009,GD2020017,01/02/2020,21/01/2020,oropharyngeal swabs,moderate,hubei,GZ,Guangzhou
-P0009,GD2020115,02/02/2020,21/01/2020,anal swab,moderate,hubei,GZ,Guangzhou
-P0009,GD2020239,09/02/2020,21/01/2020,anal swab,moderate,hubei,GZ,Guangzhou
-P0009,GD2020341,09/02/2020,21/01/2020,nasopharyngeal swabs,moderate,hubei,GZ,Guangzhou
-P0010,GD2020080,01/02/2020,27/01/2020,anal swab,moderate,guangdong,GZ,Guangzhou
-P0010,GD2020160,03/02/2020,27/01/2020,sputum,moderate,guangdong,GZ,Guangzhou
-P0010,GD2020240,09/02/2020,27/01/2020,anal swab,moderate,guangdong,GZ,Guangzhou
-P0011,GD2020016,01/02/2020,21/01/2020,oropharyngeal swabs,moderate,guangdong,GZ,Guangzhou
-P0011,GD2020346,09/02/2020,21/01/2020,nasopharyngeal swabs,moderate,guangdong,GZ,Guangzhou
-P0012,GDSZ202006,05/02/2020,20/01/2020,oropharyngeal swabs,moderate,hubei,SZ,Shenzhen
-P0013,GD2020241,09/02/2020,21/01/2020,anal swab,,,GZ,Guangzhou
-P0013,GD2020334,09/02/2020,21/01/2020,nasopharyngeal swabs,,,GZ,Guangzhou
-P0014,GDSZ202013,05/02/2020,27/01/2020,oropharyngeal swabs,moderate,hubei,SZ,Shenzhen
-P0015,GDFS2020067,10/02/2020,08/02/2020,nasopharyngeal swabs,mild,other,FS,Foshan
-P0016,GDSZ202007,05/02/2020,30/01/2020,oropharyngeal swabs,moderate,hubei,SZ,Shenzhen
-P0017,GDSZ202014,05/02/2020,23/01/2020,oropharyngeal swabs,mild,hubei,SZ,Shenzhen
-P0018,GD2020258,09/02/2020,24/01/2020,anal swab,moderate,hubei,GZ,Guangzhou
-P0018,GD2020320,09/02/2020,24/01/2020,nasopharyngeal swabs,moderate,hubei,GZ,Guangzhou
-P0019,GDSZ202015,05/02/2020,22/01/2020,oropharyngeal swabs,moderate,hubei,SZ,Shenzhen
-P0020,GDSZ202008,05/02/2020,29/01/2020,oropharyngeal swabs,moderate,hubei,SZ,Shenzhen
-P0021,GD2020086,01/02/2020,25/01/2020,sputum,,,GZ,Guangzhou
-P0022,GD2020012,01/02/2020,27/01/2020,oropharyngeal swabs,moderate,guangdong,GZ,Guangzhou
-P0022,GD2020349,09/02/2020,27/01/2020,nasopharyngeal swabs,moderate,guangdong,GZ,Guangzhou
-P0023,GD2020234,07/02/2020,,sputum,,,GZ,Guangzhou
-P0024,GDSZ202005,05/02/2020,27/01/2020,oropharyngeal swabs,moderate,hubei,SZ,Shenzhen
-P0025,GDFS2020052,10/02/2020,21/01/2020,sputum,severe,hubei,FS,Foshan
-P0026,GDFS2020127,12/02/2020,01/02/2020,oropharyngeal swabs,critical,hubei,FS,Foshan
-P0027,GD2020027,01/02/2020,21/01/2020,oropharyngeal swabs,severe,hubei,GZ,Guangzhou
-P0027,GD2020233,07/02/2020,21/01/2020,sputum,severe,hubei,GZ,Guangzhou
-P0028,GD2020246,09/02/2020,27/01/2020,anal swab,moderate,,GZ,Guangzhou
-P0029,GD2020227,05/02/2020,19/01/2020,sputum,moderate,hubei,GZ,Guangzhou
-P0030,GD2020329,09/02/2020,30/01/2020,nasopharyngeal swabs,moderate,hubei,GZ,Guangzhou
-P0031,GD2020134,02/02/2020,25/01/2020,sputum,moderate,hubei,GZ,Guangzhou
-P0032,GDSZ202009,05/02/2020,30/01/2020,oropharyngeal swabs,severe,hubei,SZ,Shenzhen
-P0033,GD2020309,09/02/2020,22/01/2020,nasopharyngeal swabs,moderate,hubei,GZ,Guangzhou
-P0034,2020XN4239,30/01/2020,23/01/2020,oropharyngeal swabs,moderate,guangdong,GZ,Guangzhou
-P0035,2020XN4243,30/01/2020,25/01/2020,oropharyngeal swabs,severe,hubei,GZ,Guangzhou
-P0036,2020XN4273,30/01/2020,27/01/2020,oropharyngeal swabs,moderate,guangdong,GZ,Guangzhou
-P0037,2020XN4276,31/01/2020,29/01/2020,oropharyngeal swabs,moderate,hubei,GZ,Guangzhou
-P0038,2020XN4291,30/01/2020,28/01/2020,oropharyngeal swabs,moderate,hubei,GZ,Guangzhou
-P0039,2020XN4373,30/01/2020,28/01/2020,oropharyngeal swabs,moderate,hubei,GZ,Guangzhou
-P0040,2020XN4433,30/01/2020,24/01/2020,oropharyngeal swabs,moderate,hubei,GZ,Guangzhou
-P0002,2020XN4448,31/01/2020,18/01/2020,oropharyngeal swabs,moderate,hubei,GZ,Guangzhou
-P0041,2020XN4459,30/01/2020,30/01/2020,oropharyngeal swabs,critical,guangdong,GZ,Guangzhou
-P0042,2020XN4475,30/01/2020,29/01/2020,oropharyngeal swabs,moderate,hubei,GZ,Guangzhou
-P0043,GD2020085,01/02/2020,21/01/2020,sputum,moderate,hubei,GZ,Guangzhou
-P0027,GD2020136,02/02/2020,21/01/2020,sputum,severe,hubei,GZ,Guangzhou
-P0021,GD2020145,03/02/2020,,oropharyngeal swabs,,,GZ,Guangzhou
-P0044,GDFS2020056,10/02/2020,27/01/2020,sputum,severe,hubei,FS,Foshan
-P0045,DG-S9,28/02/2020,31/01/2020,anal swab,mild,hubei,DG,Dongguan
-P0046,FS-S42,28/02/2020,04/02/2020,anal swab,asymptomatic,,FS,Foshan
-P0047,FS-S48,28/02/2020,22/01/2020,anal swab,moderate,hubei,FS,Foshan
-P0048,MM-S1,28/02/2020,21/01/2020,anal swab,,hubei,MM,Maoming
-P0049,SZ-N59,28/02/2020,30/01/2020,oropharyngeal swabs,severe,hubei,SZ,Shenzhen
-P0050,GZ-S6,28/02/2020,08/02/2020,anal swab,moderate,,GZ,Guangzhou
-P0051,FS-S29,28/02/2020,06/02/2020,anal swab,moderate,hubei,FS,Foshan
-P0052,FS-S30,28/02/2020,08/02/2020,anal swab,,,FS,Foshan
-P0015,FS-S34,28/02/2020,08/02/2020,anal swab,mild,other,FS,Foshan
-P0053,FS-S50,28/02/2020,23/01/2020,anal swab,moderate,hubei,FS,Foshan
-P0025,FS-N40,28/02/2020,21/01/2020,oropharyngeal swabs,severe,hubei,FS,Foshan
-P0046,FS-N42,28/02/2020,04/02/2020,oropharyngeal swabs,asymptomatic,,FS,Foshan
-P0054,DG-S2,28/02/2020,09/02/2020,anal swab,mild,other,DG,Dongguan
-P0055,DG-S6,28/02/2020,01/02/2020,anal swab,moderate,other,DG,Dongguan
-P0056,DG-S41,28/02/2020,20/02/2020,anal swab,moderate,guangdong,DG,Dongguan
-P0057,SZ-N128,28/02/2020,27/01/2020,oropharyngeal swabs,severe,hubei,SZ,Shenzhen
-P0058,ZH-S33,28/02/2020,26/01/2020,anal swab,moderate,hubei,ZH,Zhuhai
-P0059,ZH-N22,28/02/2020,05/01/2020,oropharyngeal swabs,moderate,hubei,ZH,Zhuhai
-P0060,ZS-S6,28/02/2020,06/02/2020,anal swab,moderate,hubei,ZS,Zhonghan
-P0061,ZQ-S2,28/02/2020,10/02/2020,anal swab,moderate,guangdong,ZQ,Zhaoqing
-P0062,JM-S1,28/02/2020,07/02/2020,anal swab,,guangdong,JM,Jiangmen
+P0001,GDSZ202010,2020-02-05,2020-01-25,oropharyngeal swabs,,guangdong,SZ,Shenzhen
+P0002,GD2020331,2020-02-09,2020-01-28,nasopharyngeal swabs,moderate,hubei,GZ,Guangzhou
+P0003,GDSZ202003,2020-02-05,2020-01-26,oropharyngeal swabs,moderate,hubei,SZ,Shenzhen
+P0004,GDSZ202004,2020-02-05,2020-01-27,oropharyngeal swabs,severe,hubei,SZ,Shenzhen
+P0005,GDFS2020054,2020-02-10,2020-01-26,sputum,critical,guangdong,FS,Foshan
+P0006,GD2020264,2020-02-09,2020-01-29,anal swab,moderate,guangdong,GZ,Guangzhou
+P0006,GD2020336,2020-02-09,2020-01-29,nasopharyngeal swabs,moderate,guangdong,GZ,Guangzhou
+P0007,GD2020139,2020-02-02,2020-01-24,sputum,critical,other,GZ,Guangzhou
+P0008,GD2020087,2020-02-01,,sputum,,,GZ,Guangzhou
+P0009,GD2020017,2020-02-01,2020-01-21,oropharyngeal swabs,moderate,hubei,GZ,Guangzhou
+P0009,GD2020115,2020-02-02,2020-01-21,anal swab,moderate,hubei,GZ,Guangzhou
+P0009,GD2020239,2020-02-09,2020-01-21,anal swab,moderate,hubei,GZ,Guangzhou
+P0009,GD2020341,2020-02-09,2020-01-21,nasopharyngeal swabs,moderate,hubei,GZ,Guangzhou
+P0010,GD2020080,2020-02-01,2020-01-27,anal swab,moderate,guangdong,GZ,Guangzhou
+P0010,GD2020160,2020-02-03,2020-01-27,sputum,moderate,guangdong,GZ,Guangzhou
+P0010,GD2020240,2020-02-09,2020-01-27,anal swab,moderate,guangdong,GZ,Guangzhou
+P0011,GD2020016,2020-02-01,2020-01-21,oropharyngeal swabs,moderate,guangdong,GZ,Guangzhou
+P0011,GD2020346,2020-02-09,2020-01-21,nasopharyngeal swabs,moderate,guangdong,GZ,Guangzhou
+P0012,GDSZ202006,2020-02-05,2020-01-20,oropharyngeal swabs,moderate,hubei,SZ,Shenzhen
+P0013,GD2020241,2020-02-09,2020-01-21,anal swab,,,GZ,Guangzhou
+P0013,GD2020334,2020-02-09,2020-01-21,nasopharyngeal swabs,,,GZ,Guangzhou
+P0014,GDSZ202013,2020-02-05,2020-01-27,oropharyngeal swabs,moderate,hubei,SZ,Shenzhen
+P0015,GDFS2020067,2020-02-10,2020-02-08,nasopharyngeal swabs,mild,other,FS,Foshan
+P0016,GDSZ202007,2020-02-05,2020-01-30,oropharyngeal swabs,moderate,hubei,SZ,Shenzhen
+P0017,GDSZ202014,2020-02-05,2020-01-23,oropharyngeal swabs,mild,hubei,SZ,Shenzhen
+P0018,GD2020258,2020-02-09,2020-01-24,anal swab,moderate,hubei,GZ,Guangzhou
+P0018,GD2020320,2020-02-09,2020-01-24,nasopharyngeal swabs,moderate,hubei,GZ,Guangzhou
+P0019,GDSZ202015,2020-02-05,2020-01-22,oropharyngeal swabs,moderate,hubei,SZ,Shenzhen
+P0020,GDSZ202008,2020-02-05,2020-01-29,oropharyngeal swabs,moderate,hubei,SZ,Shenzhen
+P0021,GD2020086,2020-02-01,2020-01-25,sputum,,,GZ,Guangzhou
+P0022,GD2020012,2020-02-01,2020-01-27,oropharyngeal swabs,moderate,guangdong,GZ,Guangzhou
+P0022,GD2020349,2020-02-09,2020-01-27,nasopharyngeal swabs,moderate,guangdong,GZ,Guangzhou
+P0023,GD2020234,2020-02-07,,sputum,,,GZ,Guangzhou
+P0024,GDSZ202005,2020-02-05,2020-01-27,oropharyngeal swabs,moderate,hubei,SZ,Shenzhen
+P0025,GDFS2020052,2020-02-10,2020-01-21,sputum,severe,hubei,FS,Foshan
+P0026,GDFS2020127,2020-02-12,2020-02-01,oropharyngeal swabs,critical,hubei,FS,Foshan
+P0027,GD2020027,2020-02-01,2020-01-21,oropharyngeal swabs,severe,hubei,GZ,Guangzhou
+P0027,GD2020233,2020-02-07,2020-01-21,sputum,severe,hubei,GZ,Guangzhou
+P0028,GD2020246,2020-02-09,2020-01-27,anal swab,moderate,,GZ,Guangzhou
+P0029,GD2020227,2020-02-05,2020-01-19,sputum,moderate,hubei,GZ,Guangzhou
+P0030,GD2020329,2020-02-09,2020-01-30,nasopharyngeal swabs,moderate,hubei,GZ,Guangzhou
+P0031,GD2020134,2020-02-02,2020-01-25,sputum,moderate,hubei,GZ,Guangzhou
+P0032,GDSZ202009,2020-02-05,2020-01-30,oropharyngeal swabs,severe,hubei,SZ,Shenzhen
+P0033,GD2020309,2020-02-09,2020-01-22,nasopharyngeal swabs,moderate,hubei,GZ,Guangzhou
+P0034,2020XN4239,2020-01-30,2020-01-23,oropharyngeal swabs,moderate,guangdong,GZ,Guangzhou
+P0035,2020XN4243,2020-01-30,2020-01-25,oropharyngeal swabs,severe,hubei,GZ,Guangzhou
+P0036,2020XN4273,2020-01-30,2020-01-27,oropharyngeal swabs,moderate,guangdong,GZ,Guangzhou
+P0037,2020XN4276,2020-01-31,2020-01-29,oropharyngeal swabs,moderate,hubei,GZ,Guangzhou
+P0038,2020XN4291,2020-01-30,2020-01-28,oropharyngeal swabs,moderate,hubei,GZ,Guangzhou
+P0039,2020XN4373,2020-01-30,2020-01-28,oropharyngeal swabs,moderate,hubei,GZ,Guangzhou
+P0040,2020XN4433,2020-01-30,2020-01-24,oropharyngeal swabs,moderate,hubei,GZ,Guangzhou
+P0002,2020XN4448,2020-01-31,2020-01-18,oropharyngeal swabs,moderate,hubei,GZ,Guangzhou
+P0041,2020XN4459,2020-01-30,2020-01-30,oropharyngeal swabs,critical,guangdong,GZ,Guangzhou
+P0042,2020XN4475,2020-01-30,2020-01-29,oropharyngeal swabs,moderate,hubei,GZ,Guangzhou
+P0043,GD2020085,2020-02-01,2020-01-21,sputum,moderate,hubei,GZ,Guangzhou
+P0027,GD2020136,2020-02-02,2020-01-21,sputum,severe,hubei,GZ,Guangzhou
+P0021,GD2020145,2020-02-03,,oropharyngeal swabs,,,GZ,Guangzhou
+P0044,GDFS2020056,2020-02-10,2020-01-27,sputum,severe,hubei,FS,Foshan
+P0045,DG-S9,2020-02-28,2020-01-31,anal swab,mild,hubei,DG,Dongguan
+P0046,FS-S42,2020-02-28,2020-02-04,anal swab,asymptomatic,,FS,Foshan
+P0047,FS-S48,2020-02-28,2020-01-22,anal swab,moderate,hubei,FS,Foshan
+P0048,MM-S1,2020-02-28,2020-01-21,anal swab,,hubei,MM,Maoming
+P0049,SZ-N59,2020-02-28,2020-01-30,oropharyngeal swabs,severe,hubei,SZ,Shenzhen
+P0050,GZ-S6,2020-02-28,2020-02-08,anal swab,moderate,,GZ,Guangzhou
+P0051,FS-S29,2020-02-28,2020-02-06,anal swab,moderate,hubei,FS,Foshan
+P0052,FS-S30,2020-02-28,2020-02-08,anal swab,,,FS,Foshan
+P0015,FS-S34,2020-02-28,2020-02-08,anal swab,mild,other,FS,Foshan
+P0053,FS-S50,2020-02-28,2020-01-23,anal swab,moderate,hubei,FS,Foshan
+P0025,FS-N40,2020-02-28,2020-01-21,oropharyngeal swabs,severe,hubei,FS,Foshan
+P0046,FS-N42,2020-02-28,2020-02-04,oropharyngeal swabs,asymptomatic,,FS,Foshan
+P0054,DG-S2,2020-02-28,2020-02-09,anal swab,mild,other,DG,Dongguan
+P0055,DG-S6,2020-02-28,2020-02-01,anal swab,moderate,other,DG,Dongguan
+P0056,DG-S41,2020-02-28,2020-02-20,anal swab,moderate,guangdong,DG,Dongguan
+P0057,SZ-N128,2020-02-28,2020-01-27,oropharyngeal swabs,severe,hubei,SZ,Shenzhen
+P0058,ZH-S33,2020-02-28,2020-01-26,anal swab,moderate,hubei,ZH,Zhuhai
+P0059,ZH-N22,2020-02-28,2020-01-05,oropharyngeal swabs,moderate,hubei,ZH,Zhuhai
+P0060,ZS-S6,2020-02-28,2020-02-06,anal swab,moderate,hubei,ZS,Zhonghan
+P0061,ZQ-S2,2020-02-28,2020-02-10,anal swab,moderate,guangdong,ZQ,Zhaoqing
+P0062,JM-S1,2020-02-28,2020-02-07,anal swab,,guangdong,JM,Jiangmen

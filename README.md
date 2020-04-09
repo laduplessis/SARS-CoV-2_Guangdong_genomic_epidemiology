@@ -5,7 +5,7 @@
 
 This repository contains the data files, configuration files, log files, tree files and scripts necessary to reproduce the analyses and figures presented in [https://doi.org/10.1101/2020.04.01.20047076](https://doi.org/10.1101/2020.04.01.20047076). Some of the scripts may need some adjustment depending on the local setup. 
 
-Note that because of the GISAID [terms of use](https://www.gisaid.org/registration/terms-of-use/) genomic sequences cannot be shared in this repository. Instead, we make the GISAID accessions available and provide a table of acknowledgments. 
+Note that because of the GISAID [terms of use](https://www.gisaid.org/registration/terms-of-use/) genomic sequences cannot be shared in this repository. Instead, we make the GISAID accessions available and provide a table of acknowledgements. 
 
 
 ## Highlights
@@ -21,24 +21,28 @@ _COVID-19 is caused by the SARS-CoV-2 coronavirus and was first reported in cent
 
 ## Dependencies
 
-- PhyML 3.3
+- PhyML v3.3
 - BEAST v1.10.4
 - BioPython
-- ggplot2
-- ggtree
+- ggplot2, ggtree, treeio, coda, gplots, cowplot, lubridate, phytools
 - [figtreejs-react](https://github.com/jtmccr1/figtreejs-react): Commit #96534dc
 - [beastio](https://github.com/laduplessis/beastio): Commit #b18caa6
+
+
+## Data
+
+1. `data/cases-guangdong.csv`: Numbers of reported cases in Guangdong.
+2. `data/samples.csv`: Sequencing samples collected in Guangdong.
+3. `data/sequences.csv`: Statistics of sequences generated from the samples in `samples.csv`.
+4. `data/final_alignment_GDHB.csv`: Taxon labels of sequences from Guangdong and Hubei in the final alignment.
+5. `data/GISAID_acknowledgements.txt`: Sequences used in the analyses.
 
 
 ## Phylogenetic analyses
 
 1. To build the maximum likelihood tree in PhyML: `phyml -i final_alignment_250.phy --quiet --run_id HKY+G`
 2. To run the BEAST analysis run the XML file in `results/beast/` (after adding in the genome sequences).
-3. To extract the SNP and gap statistics (for the mutational panel in Figure 2), create an alignment that is trimmed to the reference (MN908847.3) with the reference as the first sequence in the alignment and run:
-
-```
-python scripts/msastats.py -i results/alignments/final_alignment_trimmedToMN908947.fasta -f "|" -s 1 -o results/alignments/ -g
-```
+3. To extract the SNP and gap statistics (for the mutational panel in Figure 2), create an alignment that is trimmed to the reference (MN908847.3) with the reference as the first sequence in the alignment and run: `python scripts/msastats.py -i results/alignments/final_alignment_trimmedToMN908947.fasta -f "|" -s 1 -o results/alignments/ -g`
 
 
 ## MCC tree figure
@@ -49,5 +53,6 @@ is in the scripts directory.
 
 
 ## Other figures
+To reproduce the other figures, run the notebook `scripts/Figures.Rmd`, which creates `Figures.pdf`. Note that the notebook requires the SNP and gap statistics of the alignment for some figures, which are not stored on the repository (because of GISAID terms of use). 
 
 
