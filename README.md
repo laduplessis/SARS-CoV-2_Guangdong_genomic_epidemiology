@@ -6,7 +6,7 @@
 
 ---
 
-This repository contains the data files, configuration files, log files, tree files and scripts necessary to reproduce the analyses and figures presented in **Lu et al., Cell, 2020** ([htthttps://doi.org/10.1016/j.cell.2020.04.023](https://doi.org/10.1016/j.cell.2020.04.023)). Some of the scripts may need some adjustment depending on the local setup. 
+This repository contains the data files, configuration files, log files, tree files and scripts necessary to reproduce the analyses and figures presented in **Lu et al., Cell, 2020** ([https://doi.org/10.1016/j.cell.2020.04.023](https://doi.org/10.1016/j.cell.2020.04.023)). Some of the scripts may need some adjustment depending on the local setup. 
 
 Note that because of the GISAID [terms of use](https://www.gisaid.org/registration/terms-of-use/) genomic sequences cannot be shared in this repository. Instead, we make the GISAID accessions available and provide a table of acknowledgements. 
 
